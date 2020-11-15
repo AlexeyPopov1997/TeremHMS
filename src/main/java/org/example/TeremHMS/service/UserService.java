@@ -1,5 +1,7 @@
 package org.example.TeremHMS.service;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -23,9 +25,19 @@ public class UserService implements UserDetailsService {
     @Autowired
     private MailSender mailSender;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Value("S{hostname}")
+    private String hostname;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username);
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("Пользователь не найден");
+        }
+        return user;
     }
 
     public boolean addUser(User user){
@@ -36,6 +48,7 @@ public class UserService implements UserDetailsService {
         user.setActive(true);
         user.setRoles(Collections.singleton(Role.USER));
         user.setActivationCode(UUID.randomUUID().toString());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         sendMessage(user);
         return true;
@@ -44,8 +57,9 @@ public class UserService implements UserDetailsService {
     private void sendMessage(User user) {
         if (!StringUtils.isEmpty(user.getEmail())){
             String message = String.format("Hello, %s! \n" +
-                            "Welcome to TeremSAS. Please, visit next link: http://localhost:8080/activate/%s",
+                            "Welcome to TeremSAS. Please, visit next link: http://%s/activate/%s",
                     user.getUsername(),
+                    hostname,
                     user.getActivationCode()
             );
             mailSender.send(user.getEmail(), "Activation Code", message);

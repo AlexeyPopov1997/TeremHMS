@@ -5,13 +5,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import org.example.TeremHMS.domain.User;
 import org.example.TeremHMS.domain.Message;
 import org.example.TeremHMS.repos.MessageRepository;
 
+import javax.validation.Valid;
 import java.io.IOException;
+import java.util.Map;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("ALL")
 @Controller
@@ -35,11 +41,19 @@ public class MessageController {
 
     @PostMapping
     public String addNewMessage(@AuthenticationPrincipal User user,
-                                @RequestParam String text,
-                                @RequestParam String tag, Model model) throws IOException {
-        Message message = new Message(text, tag, user);
+                                @Valid Message message,
+                                BindingResult bindingResult,
+                                Model model) throws IOException {
+        message.setAuthor(user);
         message.setStatus("Не принято");
-        messageRepository.save(message);
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorsMap = UtilsController.getErrors(bindingResult);
+            model.mergeAttributes(errorsMap);
+            model.addAttribute("message" ,message);
+        } else {
+            model.addAttribute("model", null);
+            messageRepository.save(message);
+        }
         Iterable<Message> messages = messageRepository.findAll();
         model.addAttribute("messages", messages);
         return "messagePage";

@@ -1,6 +1,9 @@
 package org.example.TeremHMS.domain;
 
+import org.hibernate.validator.constraints.Length;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 public class Message {
@@ -8,7 +11,11 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotBlank(message = "Пожулуйста, составте текст заявления")
+    @Length(max = 2048, message = "Текст заявления превыает допустимое количество символов (2048)")
     private String text;
+    @NotBlank(message = "Пожулуйста, выберите тэг заявления")
+    @Length(max = 255, message = "Тэг заявления превыает допустимое количество символов (255)")
     private String tag;
     private String status;
 
