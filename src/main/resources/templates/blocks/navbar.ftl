@@ -13,21 +13,25 @@
             <li class="nav-item">
                 <a class="nav-link" href="/">Главная</a>
             </li>
+
             <#if !isUser>
-            <li class="nav-item">
-                <a class="nav-link" href="/messagePage">Заявления</a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/messagePage">Заявления</a>
+                </li>
             </#if>
+
             <#if user??>
-            <li class="nav-item">
-                <a class="nav-link" href="/user/profilePage">Личный кабинет</a>
-            </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/user/profilePage">Личный кабинет</a>
+                </li>
             </#if>
+
             <#if isAdmin>
                 <li class="nav-item">
                     <a class="nav-link" href="/user">Список пользователей</a>
                 </li>
             </#if>
+
             <#if isManager>
                 <li class="nav-item">
                     <a class="nav-link" href="/user">Список пользователей</a>
@@ -36,6 +40,7 @@
         </ul>
 
         <div class="navbar-text mr-3">${name}</div>
+
         <@l.logout />
     </div>
 </nav>

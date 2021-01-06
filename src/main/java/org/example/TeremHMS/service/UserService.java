@@ -1,12 +1,12 @@
 package org.example.TeremHMS.service;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.util.StringUtils;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -57,7 +57,7 @@ public class UserService implements UserDetailsService {
     private void sendMessage(User user) {
         if (!StringUtils.isEmpty(user.getEmail())){
             String message = String.format("Hello, %s! \n" +
-                            "Welcome to TeremSAS. Please, visit next link: http://%s/activate/%s",
+                            "Welcome to TeremHMS. Please, visit next link: http://%s/activate/%s",
                     user.getUsername(),
                     hostname,
                     user.getActivationCode()
