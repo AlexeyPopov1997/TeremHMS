@@ -35,47 +35,51 @@
 
     <#if !isManager>
         <div class="py-5 text-center">
-        <div class="mt-5">
-        <a class="btn btn-success" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
-           aria-controls="collapseExample">
-            Добавить новое заявление
-        </a>
+            <div class="mt-5">
+                <a class="btn btn-success" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
+                   aria-controls="collapseExample">
+                    Добавить новое заявление
+                </a>
 
-        <div class="collapse <#if message??>show</#if>" id="collapseExample">
-            <div class="form-group mt-3">
-                <form method="post" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label>
-                            <input type="text" class="form-control ${(textError??)?string('is-invalid', '')}"
-                                   value="<#if message??>${message.text}</#if>" name="text"
-                                   placeholder="Заполните заявление в свободной форме с указанием сроков" size="70"/>
-                        </label>
+                <div class="collapse <#if message??>show</#if>" id="collapseExample">
+                    <div class="form-group mt-3">
+                        <form method="post" enctype="multipart/form-data">
+                            <div class="form-group">
+                                <label>
+                                    <input type="text" class="form-control ${(textError??)?string('is-invalid', '')}"
+                                           value="<#if message??>${message.text}</#if>" name="text"
+                                           placeholder="Заполните заявление в свободной форме с указанием сроков"
+                                           size="70"/>
+                                </label>
 
-                        <#if textError??>
-                            <div class="invalid-feedback">
-                                ${textError}
+                                <#if textError??>
+                                    <div class="invalid-feedback">
+                                        ${textError}
+                                    </div>
+                                </#if>
                             </div>
-                        </#if>
-                    </div>
 
-                    <div class="form-group">
-                        <label>
-                            <input type="text" class="form-control ${(tagError??)?string('is-invalid', '')}"
-                                   value="<#if message??>${message.tag}</#if>" name="tag"
-                                   placeholder="Поселение/Продление/Выселение" size="70"/>
-                        </label>
+                            <div class="form-group">
+                                <label>
+                                    <input type="text" class="form-control ${(tagError??)?string('is-invalid', '')}"
+                                           value="<#if message??>${message.tag}</#if>" name="tag"
+                                           placeholder="Поселение/Продление/Выселение" size="70"/>
+                                </label>
 
-                        <#if tagError??>
-                            <div class="invalid-feedback">
-                                ${tagError}
+                                <#if tagError??>
+                                    <div class="invalid-feedback">
+                                        ${tagError}
+                                    </div>
+                                </#if>
                             </div>
-                        </#if>
+
+                            <input type="hidden" name="_csrf" value="${_csrf.token}" />
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-success ml-2">Добавить</button>
+                            </div>
+                        </form>
                     </div>
-                    <input type="hidden" name="_csrf" value="${_csrf.token}" />
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-success ml-2">Добавить</button>
-                    </div>
-                </form>
+                </div>
             </div>
         </div>
     </#if>
@@ -88,9 +92,9 @@
                 </div>
             </h5>
 
-            <div class="card-columns">
+            <div class="card-columns" id="message-list">
                 <#list messages as message>
-                    <div class="card my-3">
+                    <div class="card my-3" data-id="${message.id}">
                         <div class="m-2">
                             <span>${message.text}</span>
                             <i>${message.tag}</i>
@@ -116,5 +120,4 @@
             </div>
         </div>
     </#if>
-    </div>
 </@c.page>
